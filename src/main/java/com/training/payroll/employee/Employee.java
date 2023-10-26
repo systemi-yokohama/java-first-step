@@ -15,7 +15,7 @@ public class Employee {
     private String lastName;
     private String role;
 
-    Employee() {}
+    public Employee() {}
 
     public Employee(String name, String role) {
         this.setName(name);

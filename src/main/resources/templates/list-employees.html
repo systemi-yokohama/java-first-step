@@ -1,36 +1,63 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Spring Boot App</title>
-</head>
+    <head th:replace="~{head :: head}">
+    </head>
 <body>
-<header>
-    <h1>Welcome to My Spring Boot Application!</h1>
-</header>
-<nav>
-    <ul>
-        <li><a th:href="@{/}" class="active">Home</a></li>
-        <li><a th:href="@{/employees}">Employees</a></li>
-        <li><a th:href="@{/orders}">Employees</a></li>
-        <!-- Add more navigation links as needed -->
-    </ul>
-</nav>
-<main>
-    <section>
-        <h2>About Us</h2>
-        <p>This is a sample Spring Boot application using Thymeleaf templates.</p>
-    </section>
-    <section>
-        <ul th:each="employee : ${employees}">
-            <li>name : <span th:text="${employee.name}"/>, role : <span th:text="${employee.role}"/></li>
-        </ul>
-    </section>
-</main>
-<footer>
-    <p>&copy; 2023 My Spring Boot App. All rights reserved.</p>
-</footer>
+    <nav th:replace="~{head :: nav}">
+    </nav>
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <p>This is a sample Spring Boot application using Thymeleaf templates.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <a th:href="@{/add-employee}" type="button" class="btn btn-primary">New</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">name</th>
+                                <th scope="col">role</th>
+                                <th scope="col">actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="employee : ${employees}">
+                                <td th:text="${employee.id}"></td>
+                                <td th:text="${employee.name}"></td>
+                                <td th:text="${employee.role}"></td>
+                                <td>
+                                    <a th:href="@{/edit-employee/{id}(id=${employee.id})}" type="button" class="btn btn-primary">Edit</a>
+                                    <button type="button" class="btn btn-danger" th:onclick="|deleteEmployee('${employee.id}')|">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script th:inline="javascript">
+            var host = window.location.origin;
+            function deleteEmployee(id) {
+                axios({
+                  method: 'delete',
+                  url: host + '/delete-employee/' + id,
+                  responseType: 'stream'
+                }).then(function (response) {
+                    window.location.replace(host);
+                })
+            }
+        </script>
+    </main>
+    <footer th:replace="~{footer :: footer}">
+    </footer>
 </body>
 </html>
